@@ -4,22 +4,22 @@ from sqlalchemy import select
 from app.db.session import engine, get_session
 from app.models.base import Base
 from app.models.user import User
-from app.routers import auth, search, image, dashboard   # sab routers import
+from app.routers import auth, search, image, dashboard   
 from app.core import security
 
 app = FastAPI(title="AI Explorer API")
 
 # ---------- CORS Middleware ---------- #
 origins = [
-    "http://localhost:5173",   # React dev server
-    "http://127.0.0.1:5173",   # kabhi kabhi ye bhi use hota hai
+    "http://localhost:5173",   
+    "http://127.0.0.1:5173",   
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],   # ✅ OPTIONS bhi allow
+    allow_methods=["*"], 
     allow_headers=["*"],
 )
 
@@ -44,14 +44,13 @@ async def create_default_admin():
             )
             db.add(admin)
             await db.commit()
-            print("✅ Default admin created: admin@example.com / admin123")
+            print(" Default admin created: admin@example.com / admin123")
         break
 
 @app.on_event("shutdown")
 async def shutdown_event():
     await engine.dispose()
 
-# ---------- Routers Include ---------- #
 app.include_router(auth.router)              
 app.include_router(search.search_router)     
 app.include_router(image.image_router)       
