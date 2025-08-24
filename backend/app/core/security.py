@@ -59,7 +59,7 @@ def decode_token(token: str) -> dict:
     return jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALG])
 
 
-# ✅ Current User from JWT
+
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = decode_token(token)
@@ -82,7 +82,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
 
 
-# ✅ Require Admin
+
 def require_admin(user=Depends(get_current_user)):
     if user.get("role") != "admin":
         raise HTTPException(status_code=403, detail="Admins only")
