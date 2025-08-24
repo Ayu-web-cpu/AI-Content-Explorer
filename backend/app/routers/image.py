@@ -12,18 +12,14 @@ import httpx
 
 router = APIRouter(prefix="/image", tags=["MCP Image"])
 
-# ✅ Export with correct name
+
 image_router = router
 
-# ✅ MCP Config
 MCP_IMAGE_URL = "https://server.smithery.ai/@falahgs/flux-imagegen-mcp-server/mcp"
 API_KEY = "73dfbc49-709d-41a2-b868-3ac58a0a2dc4"
 PROFILE = "mixed-viper-NggMmT"
 
 
-# =============================
-# 🖼️ Generate Image + Save Data
-# =============================
 @image_router.post("/")
 async def generate_image(
     prompt: str = Query(..., description="Prompt to generate image"),
@@ -32,22 +28,22 @@ async def generate_image(
 ):
     try:
         url = f"{MCP_IMAGE_URL}?api_key={API_KEY}&profile={PROFILE}"
-        print(f"👉 Connecting to MCP Server: {url}")
+        print(f" Connecting to MCP Server: {url}")
 
         async with streamablehttp_client(url) as (read_stream, write_stream, _):
             async with ClientSession(read_stream, write_stream) as sess:
                 await sess.initialize()
-                print("✅ Session initialized")
+                print(" Session initialized")
 
                 # List tools
                 tools = await sess.list_tools()
                 tool_names = [t.name for t in tools.tools]
-                print("✅ Available Tools:", tool_names)
+                print(" Available Tools:", tool_names)
 
                 # Prefer "generateImageUrl" if available
                 tool_to_use = "generateImageUrl" if "generateImageUrl" in tool_names else "generateImage"
 
-                print(f"👉 Calling '{tool_to_use}' tool with prompt: {prompt}")
+                print(f" Calling '{tool_to_use}' tool with prompt: {prompt}")
                 res = await sess.call_tool(tool_to_use, {"prompt": prompt, "model": "flux"})
                 outputs = res.dict().get("content", [])
 
@@ -60,7 +56,7 @@ async def generate_image(
                     except Exception:
                         image_url = None
 
-                # ✅ Save to ImageHistory
+               
                 history = ImageHistory(
                     prompt=prompt,
                     image_url=image_url or "",
@@ -70,12 +66,12 @@ async def generate_image(
                 )
                 db.add(history)
 
-                # ✅ Save to SavedItem (Dashboard integration)
+     
                 saved_item = SavedItem(
                     owner_id=int(current_user["sub"]),
                     item_type="image",
                     title=f"Image: {prompt[:30]}",
-                    content=image_url or "",  # 👈 image URL stored in dashboard
+                    content=image_url or "",  
                     name=current_user.get("role", "user"),
                 )
                 db.add(saved_item)
@@ -90,7 +86,7 @@ async def generate_image(
                     "results": outputs,
                     "timestamp": history.timestamp,
                     "user_id": int(current_user["sub"]),
-                    "saved_item": saved_item.to_dict(),  # 👈 ab dashboard ready
+                    "saved_item": saved_item.to_dict(), 
                 }
 
     except httpx.HTTPStatusError as e:
@@ -101,9 +97,7 @@ async def generate_image(
         raise HTTPException(status_code=500, detail=f"Image MCP error: {str(e)}")
 
 
-# =============================
-# 📜 Get User Image History
-# =============================
+
 @image_router.get("/history")
 async def get_image_history(
     db: AsyncSession = Depends(get_session),
@@ -133,9 +127,6 @@ async def get_image_history(
     }
 
 
-# =============================
-# ❌ Delete User Image History
-# =============================
 @image_router.delete("/history/{image_id}")
 async def delete_image_history(
     image_id: int,
