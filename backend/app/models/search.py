@@ -11,7 +11,7 @@ class SearchHistory(Base):
     results = Column(Text, nullable=False)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
 
-    # ✅ Link to users.id
+
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     owner = relationship("User", back_populates="search_history")
 
