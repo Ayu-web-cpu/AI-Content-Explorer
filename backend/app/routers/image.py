@@ -93,7 +93,7 @@ async def generate_image(
         raise HTTPException(status_code=502, detail=f"Image MCP server unavailable: {str(e)}")
 
     except Exception as e:
-        print("⚠️ MCP ERROR TRACE:", traceback.format_exc())
+        print(" MCP ERROR TRACE:", traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Image MCP error: {str(e)}")
 
 
@@ -136,7 +136,7 @@ async def delete_image_history(
     result = await db.execute(
         select(ImageHistory).where(
             ImageHistory.id == image_id,
-            ImageHistory.user_id == int(current_user["sub"])  # ✅ apna hi record delete
+            ImageHistory.user_id == int(current_user["sub"]) 
         )
     )
     record = result.scalar_one_or_none()
