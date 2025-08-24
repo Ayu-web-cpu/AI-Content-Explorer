@@ -9,7 +9,7 @@ from app.core import security
 
 app = FastAPI(title="AI Explorer API")
 
-# ---------- CORS Middleware ---------- #
+
 origins = [
     "http://localhost:5173",   
     "http://127.0.0.1:5173",   
@@ -23,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------- Startup Events ---------- #
+
 @app.on_event("startup")
 async def on_startup():
     async with engine.begin() as conn:
