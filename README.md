@@ -61,7 +61,9 @@ uvicorn app.main:app --reload
 
 ## 3. Frontend Setup
 cd frontend
+
 npm install
+
 npm run dev
 
 
