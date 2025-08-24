@@ -7,12 +7,12 @@ class SavedItem(Base):
     __tablename__ = "saved_items"
 
     id = Column(Integer, primary_key=True, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)   # ✅ FK to User
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)  
     item_type = Column(String, nullable=False)
     title = Column(String, nullable=False)
     content = Column(String, nullable=True)
     name = Column(String, nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())  # ✅ auto timestamp
+    created_at = Column(DateTime(timezone=True), server_default=func.now()) 
 
     # Relationship back to User
     user = relationship("User", back_populates="saved_items")
