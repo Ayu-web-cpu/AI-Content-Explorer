@@ -13,7 +13,7 @@ class ImageHistory(Base):
     results = Column(JSON, nullable=True)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
 
-    # ✅ Link to users.id
+    
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     owner = relationship("User", back_populates="image_history")
 
