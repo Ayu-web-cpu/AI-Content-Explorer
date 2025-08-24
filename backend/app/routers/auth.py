@@ -6,11 +6,11 @@ from app.schemas.auth import UserCreate, Token
 from app.models.user import User
 from app.core import security
 
-# ✅ Sirf yahan hi prefix aur tags rakho
+
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-# REGISTER
+
 @router.post("/register", response_model=Token)
 async def register(user_in: UserCreate, db: AsyncSession = Depends(get_session)):
     result = await db.execute(select(User).where(User.email == user_in.email))
@@ -28,7 +28,6 @@ async def register(user_in: UserCreate, db: AsyncSession = Depends(get_session))
     return Token(access_token=access, refresh_token=refresh)
 
 
-# LOGIN
 @router.post("/login", response_model=Token)
 async def login(
     request: Request,
@@ -38,12 +37,11 @@ async def login(
 ):
     email, passwd = None, None
 
-    # JSON request
     if request.headers.get("content-type", "").startswith("application/json"):
         body = await request.json()
         email, passwd = body.get("email"), body.get("password")
 
-    # Swagger UI authorize (form-data)
+    
     elif username and password:
         email, passwd = username, password
 
@@ -62,7 +60,6 @@ async def login(
     return Token(access_token=access, refresh_token=refresh)
 
 
-# REFRESH TOKEN
 @router.post("/refresh", response_model=Token)
 async def refresh(token: str):
     try:
