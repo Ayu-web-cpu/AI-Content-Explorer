@@ -26,9 +26,6 @@ async def create_user_and_login(async_client, email, password, role="user"):
     return {"Authorization": f"Bearer {token}"}
 
 
-# ------------------------------
-# 🔍 Search API Tests
-# ------------------------------
 @pytest.mark.asyncio
 async def test_search_creates_saved_item_and_dashboard(async_client):
     """✅ Search API should create SavedItem, visible in dashboard"""
@@ -39,7 +36,7 @@ async def test_search_creates_saved_item_and_dashboard(async_client):
     resp = await async_client.get("/search/", headers=user_headers, params={"query": "fastapi tutorial"})
     assert resp.status_code == 200, resp.text
 
-    # ✅ Admin can see it in dashboard
+    # Admin can see it in dashboard
     resp_admin = await async_client.get("/dashboard/admin/users/all", headers=admin_headers)
     assert resp_admin.status_code == 200, resp_admin.text
     items = resp_admin.json()
@@ -48,7 +45,7 @@ async def test_search_creates_saved_item_and_dashboard(async_client):
 
 @pytest.mark.asyncio
 async def test_search_history_and_delete(async_client):
-    """✅ User can fetch and delete search history"""
+    """User can fetch and delete search history"""
     user_headers = await create_user_and_login(async_client, "huser@example.com", "pass123", role="user")
 
     # Perform search
@@ -65,20 +62,17 @@ async def test_search_history_and_delete(async_client):
     assert del_resp.status_code == 200
 
 
-# ------------------------------
-# 🖼 Image API Tests
-# ------------------------------
 @pytest.mark.asyncio
 async def test_image_creates_saved_item_and_dashboard(async_client):
-    """✅ Image API should create SavedItem, visible in dashboard"""
+    """ Image API should create SavedItem, visible in dashboard"""
     user_headers = await create_user_and_login(async_client, "iuser@example.com", "pass123", role="user")
     admin_headers = await create_user_and_login(async_client, "iadmin@example.com", "pass123", role="admin")
 
-    # 🖼 Call image API
+  
     resp = await async_client.post("/image/", headers=user_headers, params={"prompt": "dog photo"})
     assert resp.status_code == 200, resp.text
 
-    # ✅ Admin can see it in dashboard
+
     resp_admin = await async_client.get("/dashboard/admin/users/all", headers=admin_headers)
     assert resp_admin.status_code == 200, resp_admin.text
     items = resp_admin.json()
@@ -87,7 +81,7 @@ async def test_image_creates_saved_item_and_dashboard(async_client):
 
 @pytest.mark.asyncio
 async def test_image_history_and_delete(async_client):
-    """✅ User can fetch and delete image history"""
+    """ User can fetch and delete image history"""
     user_headers = await create_user_and_login(async_client, "ihuser@example.com", "pass123", role="user")
 
     # Generate image
