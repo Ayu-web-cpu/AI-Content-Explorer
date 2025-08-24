@@ -10,7 +10,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     role = Column(String, default="user", nullable=False)
 
-    # 👇 Relations
+
     search_history = relationship("SearchHistory", back_populates="owner", cascade="all, delete-orphan")
     image_history = relationship("ImageHistory", back_populates="owner", cascade="all, delete-orphan")
 
