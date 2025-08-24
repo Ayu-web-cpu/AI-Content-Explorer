@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-   # ✅ not from pydantic
+  
 from functools import lru_cache
 
 class Settings(BaseSettings):
