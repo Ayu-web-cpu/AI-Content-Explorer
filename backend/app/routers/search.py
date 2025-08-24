@@ -11,22 +11,15 @@ from mcp.client.session import ClientSession
 import json
 router = APIRouter(prefix="/search", tags=["MCP Search"])
 
-# ... tumhara pura code ...
-
-# ✅ Export with correct name
 search_router = router
 
-# ✅ Router with clear name
 
-# ✅ MCP Config
 MCP_URL = "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp"
 API_KEY = "775e8343-7c8c-47b0-8d12-93f9b45c293c"
 PROFILE = "developing-marten-gJ1abJ"
 
 
-# =============================
-# 🔍 Perform Search + Save Data
-# =============================
+#
 @search_router.get("/")
 async def search_duckduckgo(
     query: str = Query(..., description="Search query string"),
@@ -54,7 +47,7 @@ async def search_duckduckgo(
                 res = await sess.call_tool("search", {"query": query, "max_results": 5})
                 outputs = res.dict().get("content", [])
 
-                # ✅ Save to SearchHistory
+          
                 history = SearchHistory(
                     query=query,
                     results=json.dumps(outputs),
@@ -62,7 +55,7 @@ async def search_duckduckgo(
                 )
                 db.add(history)
 
-                # ✅ Save to SavedItem (Dashboard integration)
+         
                 saved_item = SavedItem(
                     owner_id=int(current_user["sub"]),
                     item_type="search",
@@ -88,9 +81,7 @@ async def search_duckduckgo(
         raise HTTPException(status_code=500, detail=f"MCP error: {str(e)}")
 
 
-# =============================
-# 📜 Get User Search History
-# =============================
+
 @search_router.get("/history")
 async def get_search_history(
     db: AsyncSession = Depends(get_session),
@@ -127,7 +118,7 @@ async def delete_search_history(
     result = await db.execute(
         select(SearchHistory).where(
             SearchHistory.id == search_id,
-            SearchHistory.user_id == int(current_user["sub"])  # ✅ apna hi record delete
+            SearchHistory.user_id == int(current_user["sub"])
         )
     )
     record = result.scalar_one_or_none()
