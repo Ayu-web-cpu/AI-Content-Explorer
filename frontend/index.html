@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      
+      (() => {
+        const stored = localStorage.getItem("theme");
+        const prefers = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const useDark = stored ? stored === "dark" : prefers;
+        document.documentElement.classList.toggle("dark", useDark);
+      })();
+    </script>
+    <title>Dark Mode Simple</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
