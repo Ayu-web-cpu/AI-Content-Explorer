@@ -9,11 +9,7 @@ router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 dashboard_router = router   # alias bana liya
 
-# -------------------------
-# Admin APIs
-# -------------------------
 
-# ✅ Admin: list items of a specific user
 @router.get("/admin/{user_id}")
 async def admin_list_user_items(
     user_id: int,
